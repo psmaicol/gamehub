@@ -4,5 +4,6 @@ package com.example.gamehub.model
 data class RemoteGame(
     val id: Int,
     val title: String,
-    val thumbnail: String
+    val thumbnail: String,
+    val short_description: String?
 )
