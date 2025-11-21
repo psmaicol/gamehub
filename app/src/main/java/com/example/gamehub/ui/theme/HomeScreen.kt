@@ -29,6 +29,9 @@ fun HomeScreen(navController: NavController, viewModel: AppViewModel) {
             CenterAlignedTopAppBar(
                 title = { Text("Mis Juegos") },
                 actions = {
+                    TextButton(onClick = { navController.navigate("remote") }) {
+                        Text("Online")
+                    }
                     IconButton(onClick = { navController.navigate("add") }) {
                         Icon(Icons.Default.Add, contentDescription = "Agregar juego")
                     }
