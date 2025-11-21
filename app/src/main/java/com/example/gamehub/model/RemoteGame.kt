@@ -1,4 +1,8 @@
 package com.example.gamehub.model
 
-class RemoteGame {
-}
+// Esto representa un juego que viene desde INTERNET (API)
+data class RemoteGame(
+    val id: Int,
+    val title: String,
+    val thumbnail: String
+)
