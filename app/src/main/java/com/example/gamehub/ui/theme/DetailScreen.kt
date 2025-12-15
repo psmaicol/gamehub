@@ -113,6 +113,30 @@ fun DetailScreen(navController: NavController, viewModel: AppViewModel, id: Stri
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Button(
+                            onClick = {
+                                viewModel.deleteGame(it)
+                                navController.popBackStack("home", inclusive = false)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Eliminar juego")
+                        }
+                        Button(
+                            onClick = {
+                                navController.navigate("edit/${it.id}")
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Editar juego")
+                        }
+
+
                     }
                 }
             }

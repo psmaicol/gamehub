@@ -4,7 +4,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClien {
-    private const val BASE_URL = "https://www.freetogame.com/api/"
+
+    private const val BASE_URL = "https://api-wikigames.onrender.com/api"
 
     val api: ApiService by lazy {
         Retrofit.Builder()

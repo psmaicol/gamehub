@@ -4,9 +4,6 @@ import com.example.gamehub.model.RemoteGame
 import retrofit2.http.GET
 
 interface ApiService {
-
-    // API pública gratis de videojuegos
-    // https://www.freetogame.com/api/games
-    @GET("games")
+    @GET("api/juegos") // <-- endpoint correcto
     suspend fun getGames(): List<RemoteGame>
 }

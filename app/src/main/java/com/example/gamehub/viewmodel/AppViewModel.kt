@@ -1,6 +1,9 @@
 package com.example.gamehub.viewmodel
 
 import android.net.Uri
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gamehub.model.AppUiState
@@ -19,7 +22,12 @@ class AppViewModel(repository1: GameRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState
 
-    fun login(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun login(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             onError("Email inválido"); return
         }
@@ -35,29 +43,56 @@ class AppViewModel(repository1: GameRepository) : ViewModel() {
 
     fun addGame(name: String, description: String, imageUri: Uri?) {
         viewModelScope.launch {
-            val game = GameItem(name = name, description = description, imageUri = imageUri?.toString())
+            val game = GameItem(
+                name = name,
+                description = description,
+                imageUri = imageUri?.toString()
+            )
             repository.insertGame(game)
-            _uiState.value = _uiState.value.copy(games = repository.getAllGames())
+            loadGames()
+        }
+    }
+
+    fun updateGame(game: GameItem) {
+        viewModelScope.launch {
+            repository.updateGame(game)
+            loadGames()
+        }
+    }
+
+    fun deleteGame(game: GameItem) {
+        viewModelScope.launch {
+            repository.deleteGame(game)
+            loadGames()
         }
     }
 
     fun loadGames() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(games = repository.getAllGames())
+            _uiState.value = _uiState.value.copy(
+                games = repository.getAllGames()
+            )
         }
     }
 
-    // NUEVO: cargar juegos desde API
     fun loadRemoteGames() {
+        println("ENTRÓ A loadRemoteGames()")
+
         viewModelScope.launch {
             try {
-                val onlineGames = remoteRepository.fetchRemoteGames()
+                val onlineGames = remoteRepository.WikiGamesRepository()
+                println("Juegos recibidos: ${onlineGames.size}")
                 _uiState.value = _uiState.value.copy(remoteGames = onlineGames)
             } catch (e: Exception) {
-                println("Error al cargar API: ${e.message}")
+                println("Error API: ${e.message}")
             }
         }
     }
 
-    init { loadGames() }
+
+
+
+    init {
+        loadGames()
+    }
 }

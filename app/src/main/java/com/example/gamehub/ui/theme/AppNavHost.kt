@@ -1,4 +1,6 @@
 package com.example.gamehub.ui.theme
+import androidx.compose.runtime.collectAsState
+import com.example.gamehub.ui.theme.EditGameScreen
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -30,6 +32,14 @@ fun AppNavHost(viewModel: com.example.gamehub.viewmodel.AppViewModel) {
 
         // NUEVO
         composable("remote") { RemoteGamesScreen(navController, viewModel) }
+        composable("edit/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            val game = viewModel.uiState.collectAsState().value.games
+                .first { it.id.toString() == id }
+
+            EditGameScreen(navController, viewModel, game)
+        }
+
     }
 
 
