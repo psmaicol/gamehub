@@ -1,6 +1,5 @@
 package com.example.gamehub.ui.theme
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,11 +19,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AppViewModel) {
 
+    // Variables de estado local para los campos de texto
+    // rememberSaveable mantiene el valor si giras la pantalla
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
 
-    // Fondo con gradiente
+    // Definición del fondo con gradiente
     val gradient = Brush.verticalGradient(
         colors = listOf(
             MaterialTheme.colorScheme.primary.copy(alpha = 0.35f),
@@ -32,13 +33,14 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel) {
         )
     )
 
+    // Contenedor principal con el fondo aplicado
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(gradient),
         contentAlignment = Alignment.Center
     ) {
-
+        // Tarjeta elevada para el formulario
         ElevatedCard(
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
@@ -58,6 +60,7 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // Campo de texto para Email
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -68,6 +71,7 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel) {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // Campo de texto para Contraseña con transformación visual (puntitos)
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -79,17 +83,20 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel) {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                // Botón de Login
                 Button(
                     onClick = {
+                        // Llamada a la función de login del ViewModel
                         viewModel.login(
                             email,
                             password,
                             onSuccess = {
+                                // Si es exitoso, navega a "home" y borra "login" del historial
                                 navController.navigate("home") {
                                     popUpTo("login") { inclusive = true }
                                 }
                             },
-                            onError = { error = it }
+                            onError = { error = it } // Si falla, muestra el error
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -98,6 +105,7 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel) {
                     Text("Iniciar sesión")
                 }
 
+                // Si hay un error, se muestra aquí
                 error?.let {
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(it, color = MaterialTheme.colorScheme.error)
@@ -106,4 +114,3 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel) {
         }
     }
 }
-
