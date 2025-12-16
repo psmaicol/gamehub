@@ -1,5 +1,4 @@
-package com.example.gamehub.ui
-
+package com.example.gamehub.ui.theme // <--- CAMBIO IMPORTANTE: .theme
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,9 +42,11 @@ fun HomeScreen(navController: NavController, viewModel: AppViewModel) {
             CenterAlignedTopAppBar(
                 title = { Text("GameHub", style = MaterialTheme.typography.headlineSmall) },
                 actions = {
+                    // Botón para ir a Juegos Online
                     IconButton(onClick = { navController.navigate("remote") }) {
                         Icon(Icons.Default.Cloud, contentDescription = "Online")
                     }
+                    // Botón para agregar juego local
                     IconButton(onClick = { navController.navigate("add") }) {
                         Icon(Icons.Default.Add, contentDescription = "Agregar juego")
                     }
@@ -63,7 +64,6 @@ fun HomeScreen(navController: NavController, viewModel: AppViewModel) {
         ) {
 
             if (state.games.isEmpty()) {
-                // Pantalla vacía más bonita
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -81,11 +81,8 @@ fun HomeScreen(navController: NavController, viewModel: AppViewModel) {
                     )
                 }
             } else {
-
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-
                     items(state.games) { game ->
-
                         ElevatedCard(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -100,7 +97,6 @@ fun HomeScreen(navController: NavController, viewModel: AppViewModel) {
                                     .fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-
                                 game.imageUri?.let { uri ->
                                     Image(
                                         painter = rememberAsyncImagePainter(uri),
@@ -110,7 +106,6 @@ fun HomeScreen(navController: NavController, viewModel: AppViewModel) {
                                             .clip(RoundedCornerShape(12.dp)),
                                         contentScale = ContentScale.Crop
                                     )
-
                                     Spacer(modifier = Modifier.width(16.dp))
                                 }
 

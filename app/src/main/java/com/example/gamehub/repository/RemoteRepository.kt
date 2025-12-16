@@ -10,15 +10,29 @@ class RemoteRepository {
 
     init {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api-wikigames.onrender.com")
+            // Tu URL base en Render (asegúrate de que termine en /)
+            .baseUrl("https://api-wikigames.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         api = retrofit.create(ApiService::class.java)
     }
 
-    // Función que obtiene los juegos desde la API
-    suspend fun WikiGamesRepository(): List<RemoteGame> {
+    // --- Funciones CRUD ---
+
+    suspend fun getAllGames(): List<RemoteGame> {
         return api.getGames()
+    }
+
+    suspend fun createGame(game: RemoteGame): RemoteGame {
+        return api.createGame(game)
+    }
+
+    suspend fun updateGame(id: String, game: RemoteGame): RemoteGame {
+        return api.updateGame(id, game)
+    }
+
+    suspend fun deleteGame(id: String) {
+        api.deleteGame(id)
     }
 }

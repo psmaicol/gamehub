@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -52,6 +55,15 @@ fun RemoteGamesScreen(navController: NavController, viewModel: AppViewModel) {
                     titleContentColor = Color.White
                 )
             )
+        },
+        floatingActionButton = {
+            // Botón flotante para agregar juego a la API
+            FloatingActionButton(
+                onClick = { navController.navigate("add_remote_game") }, // Asegúrate de tener esta ruta o crear una pantalla
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Text("+", style = MaterialTheme.typography.headlineMedium, color = Color.White)
+            }
         }
     ) { padding ->
 
@@ -71,8 +83,10 @@ fun RemoteGamesScreen(navController: NavController, viewModel: AppViewModel) {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                 ) {
+                    CircularProgressIndicator(color = Color.White)
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        "No se encontraron juegos online",
+                        "Cargando juegos o lista vacía...",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.White
                     )
@@ -84,8 +98,9 @@ fun RemoteGamesScreen(navController: NavController, viewModel: AppViewModel) {
                 ) {
                     items(state.remoteGames) { game ->
 
-                        val imageUrl = if (game.thumbnail.startsWith("http")) game.thumbnail
-                        else "https://tuapi.com${game.thumbnail}" // Ajusta tu dominio
+                        // CORRECCIÓN PRINCIPAL:
+                        // Accedemos a la imagen de forma segura usando la nueva estructura
+                        val imageUrl = game.images?.cover ?: "https://via.placeholder.com/150"
 
                         ElevatedCard(
                             shape = RoundedCornerShape(16.dp),
@@ -116,11 +131,28 @@ fun RemoteGamesScreen(navController: NavController, viewModel: AppViewModel) {
                                     Spacer(modifier = Modifier.height(6.dp))
 
                                     Text(
-                                        text = game.short_description ?: "Sin descripción",
+                                        text = game.description ?: "Sin descripción",
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = Color.DarkGray,
-                                        maxLines = 3
+                                        maxLines = 2
                                     )
+
+                                    // Botones de acción (Editar / Borrar) para el CRUD
+                                    Row(modifier = Modifier.padding(top = 8.dp)) {
+                                        IconButton(
+                                            onClick = {
+                                                // Aquí llamarías a viewModel.deleteRemoteGame(game.id!!)
+                                                game.id?.let { viewModel.deleteRemoteGame(it) }
+                                            },
+                                            modifier = Modifier.size(24.dp)
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Delete,
+                                                contentDescription = "Borrar",
+                                                tint = MaterialTheme.colorScheme.error
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }

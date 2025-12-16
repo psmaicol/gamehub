@@ -2,17 +2,15 @@ package com.example.gamehub.model
 
 import com.google.gson.annotations.SerializedName
 
+// Modelo principal que coincide con tu API
 data class RemoteGame(
-
-    @SerializedName("id")
-    val id: Int,
-
-    @SerializedName("nombre")
+    val id: String? = null, // Puede ser nulo al crear (el servidor lo genera)
     val title: String,
+    val description: String?,
+    val images: ImageContainer?
+)
 
-    @SerializedName("imagen")
-    val thumbnail: String,
-
-    @SerializedName("descripcion")
-    val short_description: String?
+// Clase auxiliar para leer el objeto "images": { "cover": "url" }
+data class ImageContainer(
+    val cover: String?
 )
